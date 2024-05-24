@@ -10,7 +10,7 @@ struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("You have 3 tasks \nto complete")
@@ -36,11 +36,10 @@ struct ContentView: View {
                         )
                         .offset(x: 15, y: 20)
                 }
+                .padding(.trailing, 20) // Adjust padding from the trailing edge
             }
-            .padding(.horizontal, 20)
+            .padding(.leading, 20) // Adjust padding from the leading edge
             .padding(.top, 56)
-
-            Spacer().frame(height: 35)
 
             Button(action: {
                 // Action for button tap
@@ -56,19 +55,70 @@ struct ContentView: View {
                         ]), startPoint: .leading, endPoint: .trailing)
                     )
                     .cornerRadius(8)
-                    .padding(.horizontal, 16) // Padding to match other content
+                    .padding(.horizontal, 20) // Padding to match other content
             }
 
             HStack {
                 Text("Progress")
                     .font(.system(size: 22))
                     .foregroundColor(colorScheme == .dark ? .white : .black) // Dynamic color
-                    .padding(.top, 19)
+                    .padding(.top, 9)
+                    .padding(.leading, 20) // Adjust padding to align with button
                 Spacer() // This aligns the "Progress" text to the left
             }
-            .padding(.horizontal, 20) // Aligns with the other content's padding
-            
-            Spacer()
+
+            Rectangle()
+                .fill(Color("Rectangle", bundle: nil)) // Use asset color with different appearances for light and dark mode
+                .frame(width: UIScreen.main.bounds.width - 40, height: 139) // Adjust width to fill screen width with leading and trailing padding
+                .cornerRadius(8)
+                .overlay(
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Daily Task")
+                            .font(.system(size: 18))
+                            .foregroundColor(colorScheme == .dark ? .white : .black)
+                        
+                        Text("3/6 Task Completed")
+                            .font(.system(size: 16))
+                            .foregroundColor(colorScheme == .dark ? .white : .black)
+                            .padding(.top, 9)
+                        
+                        HStack {
+                            Text("Keep working")
+                                .font(.system(size: 14))
+                                .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.8) : Color.black.opacity(0.8))
+
+                            
+                            Spacer()
+                            
+                            Text("100%")
+                                .padding(.leading, -30)
+                                .font(.system(size: 18))
+                                .frame(width: 37, height: 22)
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                        }
+
+                        
+                        ProgressView(value: 0.5) // Adjust the progress value as needed
+                            .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                            .frame(height: 6)
+                            .padding(.top, 3)
+                    }
+                    .padding()
+                )
+                .padding(.leading, 20) // Adjust padding from the leading edge
+                .padding(.trailing, 20) // Adjust padding from the trailing edge
+                .padding(.top, 19)
+
+            HStack {
+                Text("Completed Tasks")
+                    .font(.system(size: 22))
+                    .foregroundColor(colorScheme == .dark ? .white : .black) // Dynamic color
+                    .padding(.top, 30)
+                    .padding(.leading, 20) // Adjust padding to align with button
+                Spacer() // This aligns the "Progress" text to the left
+            }
+            Spacer() // This aligns the "Progress" text to the left
+
         }
         .background(backgroundTintColor)
     }
@@ -81,7 +131,6 @@ struct ContentView: View {
         }
     }
 }
-
 #Preview {
     ContentView()
 }
