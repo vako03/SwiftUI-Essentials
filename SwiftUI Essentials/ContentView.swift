@@ -8,12 +8,12 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         VStack {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("You have 3 tasks \n to complete")
+                    Text("You have 3 tasks \nto complete")
                         .font(.system(size: 25, weight: .bold))
                 }
                 Spacer()
@@ -39,32 +39,44 @@ struct ContentView: View {
             }
             .padding(.horizontal, 20)
             .padding(.top, 56)
-            
-            Spacer().frame(height: 35) // Spacer to create a space of 35 points
-            
+
+            Spacer().frame(height: 35)
+
             Button(action: {
-                // Action when "Complete All" button is tapped
+                // Action for button tap
             }) {
                 Text("Complete All")
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
-                    .frame(width: 365, height: 50) // Button size
-                    .background(Color.blue)
+                    .frame(maxWidth: .infinity, minHeight: 50) // Stretch to fill available width
+                    .background(
+                        LinearGradient(gradient: Gradient(colors: [
+                            Color(#colorLiteral(red: 0.4509803922, green: 0.6705882353, blue: 1, alpha: 1)),
+                            Color(#colorLiteral(red: 0.2745098039, green: 0.7529411765, blue: 0.7607843137, alpha: 1))
+                        ]), startPoint: .leading, endPoint: .trailing)
+                    )
                     .cornerRadius(8)
+                    .padding(.horizontal, 16) // Padding to match other content
             }
-            .padding(.horizontal, 20)
+
+            HStack {
+                Text("Progress")
+                    .font(.system(size: 22))
+                    .foregroundColor(colorScheme == .dark ? .white : .black) // Dynamic color
+                    .padding(.top, 19)
+                Spacer() // This aligns the "Progress" text to the left
+            }
+            .padding(.horizontal, 20) // Aligns with the other content's padding
             
             Spacer()
         }
         .background(backgroundTintColor)
     }
-    
+
     var backgroundTintColor: Color {
         if colorScheme == .dark {
-            // Use dark mode background color
             return Color.black
         } else {
-            // Use light mode background color
             return Color("background")
         }
     }
@@ -73,5 +85,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-
-//                .padding(.top, -600)
