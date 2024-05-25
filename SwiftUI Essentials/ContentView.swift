@@ -91,7 +91,6 @@ struct ContentView: View {
                                         .font(.system(size: 14))
                                         .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.8) : Color.black.opacity(0.8))
                                     
-                                    
                                     Spacer()
                                     
                                     Text("\(percentageCompleted())%")
@@ -100,7 +99,6 @@ struct ContentView: View {
                                         .frame(width: 37, height: 22)
                                         .foregroundColor(colorScheme == .dark ? .white : .black)
                                 }
-                                
                                 
                                 ProgressView(value: Double(completedTasks.count) / Double(completedTasks.count + uncompletedTasks.count))
                                     .progressViewStyle(LinearProgressViewStyle(tint: .blue))
@@ -124,18 +122,32 @@ struct ContentView: View {
                     .padding(.bottom, 10)
                     
                     VStack(spacing: 0) {
-                        ForEach(completedTasks, id: \.0) { task, date in
-                            TaskCell(title: task, date: date, isCompleted: true, completedTasks: $completedTasks, uncompletedTasks: $uncompletedTasks)
-                                .frame(width: UIScreen.main.bounds.width - 40, height: 80)
-                                .padding(.bottom, 5)
+                        ForEach(0..<completedTasks.count, id: \.self) { index in
+                            TaskCell(
+                                title: completedTasks[index].0,
+                                date: completedTasks[index].1,
+                                isCompleted: true,
+                                completedTasks: $completedTasks,
+                                uncompletedTasks: $uncompletedTasks,
+                                colorIndex: index % 3
+                            )
+                            .frame(width: UIScreen.main.bounds.width - 40, height: 80)
+                            .padding(.bottom, 5)
                         }
                         
                         Spacer().frame(height: 10)
                         
-                        ForEach(uncompletedTasks, id: \.0) { task, date in
-                            TaskCell(title: task, date: date, isCompleted: false, completedTasks: $completedTasks, uncompletedTasks: $uncompletedTasks)
-                                .frame(width: UIScreen.main.bounds.width - 40, height: 80)
-                                .padding(.bottom, 5)
+                        ForEach(0..<uncompletedTasks.count, id: \.self) { index in
+                            TaskCell(
+                                title: uncompletedTasks[index].0,
+                                date: uncompletedTasks[index].1,
+                                isCompleted: false,
+                                completedTasks: $completedTasks,
+                                uncompletedTasks: $uncompletedTasks,
+                                colorIndex: index % 3
+                            )
+                            .frame(width: UIScreen.main.bounds.width - 40, height: 80)
+                            .padding(.bottom, 5)
                         }
                     }
                 }
@@ -176,52 +188,83 @@ struct TaskCell: View {
     var isCompleted: Bool
     @Binding var completedTasks: [(String, String)]
     @Binding var uncompletedTasks: [(String, String)]
+    var colorIndex: Int
+    
+    var colors: [Color] = [
+        Color(red: 0.98, green: 0.8, blue: 0.73), // #FACBBA
+        Color(red: 0.84, green: 0.94, blue: 1.0), // #D7F0FF
+        Color(red: 0.98, green: 0.85, blue: 1.0)  // #FAD9FF
+    ]
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(title)
-                    .font(.system(size: 16))
-                HStack {
-                    Image("calendar")
+        GeometryReader { geometry in
+            HStack {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(title)
+                        .font(.system(size: 16))
+                    HStack {
+                        Image("calendar")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                        Text(date)
+                            .font(.system(size: 12))
+                    }
+                }
+                Spacer()
+                if isCompleted {
+                    Image("circle")
                         .resizable()
-                        .frame(width: 15, height: 15)
-                    Text(date) // Display the date
-                        .font(.system(size: 12))
+                        .frame(width: 26, height: 26)
+                        .foregroundColor(.blue)
+                        .onTapGesture {
+                            if let index = completedTasks.firstIndex(where: { $0.0 == title }) {
+                                completedTasks.remove(at: index)
+                                uncompletedTasks.append((title, date))
+                            }
+                        }
+                } else {
+                    Image("Vector")
+                        .resizable()
+                        .frame(width: 26, height: 26)
+                        .foregroundColor(.blue)
+                        .onTapGesture {
+                            if let index = uncompletedTasks.firstIndex(where: { $0.0 == title }) {
+                                uncompletedTasks.remove(at: index)
+                                completedTasks.append((title, date))
+                            }
+                        }
                 }
             }
-            Spacer()
-            if isCompleted {
-                Image("circle")
-                    .resizable()
-                    .frame(width: 26, height: 26)
-                    .foregroundColor(.blue)
-                    .onTapGesture {
-                        if let index = completedTasks.firstIndex(where: { $0.0 == title }) {
-                            completedTasks.remove(at: index)
-                            uncompletedTasks.append((title, date))
-                        }
-                    }
-            } else {
-                Image("Vector")
-                    .resizable()
-                    .frame(width: 26, height: 26)
-                    .foregroundColor(.blue)
-                    .onTapGesture {
-                        if let index = uncompletedTasks.firstIndex(where: { $0.0 == title }) {
-                            uncompletedTasks.remove(at: index)
-                            completedTasks.append((title, date))
-                        }
-                    }
-            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 20)
+            .background(Color("Rectangle", bundle: nil))
+            .cornerRadius(8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(colors[colorIndex])
+                    .frame(width: 18, height: 65)
+                    .cornerRadius(8, corners: [.topLeft, .bottomLeft])
+                    .offset(x: -geometry.size.width / 2 + 1, y: 0)
+            )
         }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 20)
-        .background(Color("Rectangle", bundle: nil))
-        .cornerRadius(8)
     }
 }
 
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners) )
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
 
 #Preview {
     ContentView()
