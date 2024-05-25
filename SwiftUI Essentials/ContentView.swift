@@ -8,9 +8,9 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
-    @State private var completedTasks = ["Mobile App Research", "Prepare Wireframe for Main Flow", "Prepare Screens"]
-    @State private var uncompletedTasks = ["Website Research", "Prepare Wireframe for Main Flow", "Prepare Screens"]
-
+    @State private var completedTasks = [("Mobile App Research", "4 Oct"), ("Prepare Wireframe for Main Flow", "4 Oct"), ("Prepare Screens", "4 Oct")]
+    @State private var uncompletedTasks = [("Website Research", "5 Oct"), ("Prepare Wireframe for Main Flow", "5 Oct"), ("Prepare Screens", "5 Oct")]
+    
     var body: some View {
         VStack(spacing: 20) {
             HStack {
@@ -20,11 +20,11 @@ struct ContentView: View {
                 }
                 Spacer()
                 ZStack {
-                    Image("ellipse") // Overlay image
+                    Image("ellipse")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 49, height: 49)
-                    Image("image") // Background image
+                    Image("image")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 44, height: 45)
@@ -38,18 +38,18 @@ struct ContentView: View {
                         )
                         .offset(x: 15, y: 20)
                 }
-                .padding(.trailing, 20) // Adjust padding from the trailing edge
+                .padding(.trailing, 20)
             }
-            .padding(.leading, 20) // Adjust padding from the leading edge
+            .padding(.leading, 20)
             .padding(.top, 56)
-
+            
             Button(action: {
                 completeAllTasks()
             }) {
                 Text("Complete All")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, minHeight: 50) // Stretch to fill available width
+                    .frame(maxWidth: .infinity, minHeight: 50)
                     .background(
                         LinearGradient(gradient: Gradient(colors: [
                             Color(#colorLiteral(red: 0.4509803922, green: 0.6705882353, blue: 1, alpha: 1)),
@@ -57,96 +57,96 @@ struct ContentView: View {
                         ]), startPoint: .leading, endPoint: .trailing)
                     )
                     .cornerRadius(8)
-                    .padding(.horizontal, 20) // Padding to match other content
+                    .padding(.horizontal, 20)
             }
-
+            
             HStack {
                 Text("Progress")
                     .font(.system(size: 22))
-                    .foregroundColor(colorScheme == .dark ? .white : .black) // Dynamic color
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
                     .padding(.top, 9)
-                    .padding(.leading, 20) // Adjust padding to align with button
-                Spacer() // This aligns the "Progress" text to the left
+                    .padding(.leading, 20)
+                Spacer()
             }
-
-            Rectangle()
-                .fill(Color("Rectangle", bundle: nil)) // Use asset color with different appearances for light and dark mode
-                .frame(width: UIScreen.main.bounds.width - 40, height: 139) // Adjust width to fill screen width with leading and trailing padding
-                .cornerRadius(8)
-                .overlay(
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Daily Task")
-                            .font(.system(size: 18))
-                            .foregroundColor(colorScheme == .dark ? .white : .black)
-                        
-                        Text("\(completedTasks.count)/\(completedTasks.count + uncompletedTasks.count) Task Completed")
-                            .font(.system(size: 16))
-                            .foregroundColor(colorScheme == .dark ? .white : .black)
-                            .padding(.top, 9)
-                        
-                        HStack {
-                            Text("Keep working")
-                                .font(.system(size: 14))
-                                .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.8) : Color.black.opacity(0.8))
-
-                            
-                            Spacer()
-                            
-                            Text("\(percentageCompleted())%")
-                                .padding(.leading, -30)
-                                .font(.system(size: 18))
-                                .frame(width: 37, height: 22)
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
-                        }
-
-                        
-                        ProgressView(value: Double(completedTasks.count) / Double(completedTasks.count + uncompletedTasks.count)) // Adjust the progress value as needed
-                            .progressViewStyle(LinearProgressViewStyle(tint: .blue))
-                            .frame(height: 6)
-                            .padding(.top, 3)
-                    }
-                    .padding()
-                )
-                .padding(.leading, 20) // Adjust padding from the leading edge
-                .padding(.trailing, 20) // Adjust padding from the trailing edge
-                .padding(.top, 19)
-
-            HStack {
-                Text("Completed Tasks")
-                    .font(.system(size: 22))
-                    .foregroundColor(colorScheme == .dark ? .white : .black) // Dynamic color
-                    .padding(.top, 30)
-                    .padding(.leading, 20) // Adjust padding to align with button
-                Spacer() // This aligns the "Progress" text to the left
-            }
-            .padding(.bottom, 10)
             
             ScrollView {
-                VStack(spacing: 0) {
-                    ForEach(completedTasks, id: \.self) { task in
-                        TaskCell(title: task, isCompleted: true, completedTasks: $completedTasks, uncompletedTasks: $uncompletedTasks)
-                            .frame(width: 390, height: 80)
-                            .background(Color("Rectangle", bundle: nil))
-                            .padding(.bottom, 5) // Add bottom padding to marked cells
+                VStack(spacing: 20) {
+                    Rectangle()
+                        .fill(Color("Rectangle", bundle: nil))
+                        .frame(width: UIScreen.main.bounds.width - 40, height: 139)
+                        .cornerRadius(8)
+                        .overlay(
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Daily Task")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                                
+                                Text("\(completedTasks.count)/\(completedTasks.count + uncompletedTasks.count) Task Completed")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                                    .padding(.top, 9)
+                                
+                                HStack {
+                                    Text("Keep working")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.8) : Color.black.opacity(0.8))
+                                    
+                                    
+                                    Spacer()
+                                    
+                                    Text("\(percentageCompleted())%")
+                                        .padding(.leading, -30)
+                                        .font(.system(size: 18))
+                                        .frame(width: 37, height: 22)
+                                        .foregroundColor(colorScheme == .dark ? .white : .black)
+                                }
+                                
+                                
+                                ProgressView(value: Double(completedTasks.count) / Double(completedTasks.count + uncompletedTasks.count))
+                                    .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                                    .frame(height: 6)
+                                    .padding(.top, 3)
+                            }
+                                .padding()
+                        )
+                        .padding(.leading, 20)
+                        .padding(.trailing, 20)
+                        .padding(.top, 19)
+                    
+                    HStack {
+                        Text("Completed Tasks")
+                            .font(.system(size: 22))
+                            .foregroundColor(colorScheme == .dark ? .white : .black)
+                            .padding(.top, 30)
+                            .padding(.leading, 20)
+                        Spacer()
                     }
+                    .padding(.bottom, 10)
                     
-                    Spacer().frame(height: 10) // Add spacing between different types of cells
-                    
-                    ForEach(uncompletedTasks, id: \.self) { task in
-                        TaskCell(title: task, isCompleted: false, completedTasks: $completedTasks, uncompletedTasks: $uncompletedTasks)
-                            .frame(width: 390, height: 80)
-                            .background(Color("Rectangle", bundle: nil))
-                            .padding(.bottom, 5) // Add bottom padding to unmarked cells
+                    VStack(spacing: 0) {
+                        ForEach(completedTasks, id: \.0) { task, date in
+                            TaskCell(title: task, date: date, isCompleted: true, completedTasks: $completedTasks, uncompletedTasks: $uncompletedTasks)
+                                .frame(width: UIScreen.main.bounds.width - 40, height: 80)
+                                .padding(.bottom, 5)
+                        }
+                        
+                        Spacer().frame(height: 10)
+                        
+                        ForEach(uncompletedTasks, id: \.0) { task, date in
+                            TaskCell(title: task, date: date, isCompleted: false, completedTasks: $completedTasks, uncompletedTasks: $uncompletedTasks)
+                                .frame(width: UIScreen.main.bounds.width - 40, height: 80)
+                                .padding(.bottom, 5)
+                        }
                     }
                 }
                 .padding(.horizontal, 20)
             }
-
-            Spacer() // This aligns the "Progress" text to the left
+            
+            Spacer()
         }
         .background(backgroundTintColor)
     }
-
+    
     var backgroundTintColor: Color {
         if colorScheme == .dark {
             return Color.black
@@ -159,7 +159,7 @@ struct ContentView: View {
         completedTasks.append(contentsOf: uncompletedTasks)
         uncompletedTasks.removeAll()
     }
-
+    
     func percentageCompleted() -> Int {
         let totalTasks = completedTasks.count + uncompletedTasks.count
         if totalTasks > 0 {
@@ -172,48 +172,57 @@ struct ContentView: View {
 
 struct TaskCell: View {
     var title: String
+    var date: String
     var isCompleted: Bool
-    @Binding var completedTasks: [String]
-    @Binding var uncompletedTasks: [String]
+    @Binding var completedTasks: [(String, String)]
+    @Binding var uncompletedTasks: [(String, String)]
     
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 10) {
                 Text(title)
                     .font(.system(size: 16))
-                Image("calendar")
-                    .resizable()
-                    .frame(width: 15, height: 15)
+                HStack {
+                    Image("calendar")
+                        .resizable()
+                        .frame(width: 15, height: 15)
+                    Text(date) // Display the date
+                        .font(.system(size: 12))
+                }
             }
             Spacer()
             if isCompleted {
-                Image(systemName: "checkmark.circle.fill")
+                Image("circle")
                     .resizable()
                     .frame(width: 26, height: 26)
                     .foregroundColor(.blue)
-                    .onTapGesture { // Toggle completion status
-                        if let index = completedTasks.firstIndex(of: title) {
+                    .onTapGesture {
+                        if let index = completedTasks.firstIndex(where: { $0.0 == title }) {
                             completedTasks.remove(at: index)
-                            uncompletedTasks.append(title)
+                            uncompletedTasks.append((title, date))
                         }
                     }
             } else {
-                Image(systemName: "circle")
+                Image("Vector")
                     .resizable()
                     .frame(width: 26, height: 26)
                     .foregroundColor(.blue)
-                    .onTapGesture { // Toggle completion status
-                        if let index = uncompletedTasks.firstIndex(of: title) {
+                    .onTapGesture {
+                        if let index = uncompletedTasks.firstIndex(where: { $0.0 == title }) {
                             uncompletedTasks.remove(at: index)
-                            completedTasks.append(title)
+                            completedTasks.append((title, date))
                         }
                     }
             }
         }
-        .padding(.vertical, 10) // Adjust vertical padding
-        .padding(.horizontal, 20) // Adjust horizontal padding
+        .padding(.vertical, 10)
+        .padding(.horizontal, 20)
+        .background(Color("Rectangle", bundle: nil))
+        .cornerRadius(8)
     }
 }
+
+
 #Preview {
     ContentView()
 }
